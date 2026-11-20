@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Proofs</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap">
+<style>
+:root{color-scheme:light;--bone:#f3efe6;--orange:#d97757;--ink:#2b2b2a;--muted:#6b6a66;--line:#d9d3c5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bone);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+.view,.page{display:none}
+.view.active{display:flex;min-height:100vh;flex-direction:column;align-items:center;justify-content:center;gap:2rem;padding:2rem 1.25rem;text-align:center}
+.page.active{display:block;max-width:720px;margin:0 auto;padding:3.5rem 1rem 4rem}
+h1{margin:0;font-family:"Caveat","Segoe Print","Bradley Hand","Comic Sans MS",cursive;font-size:clamp(6rem,28vw,14rem);font-weight:700;line-height:1;color:var(--orange)}
+h2{font-weight:400;font-size:2rem;margin:.5rem 0 1.25rem;color:var(--orange)}
+button{font:inherit;font-size:1.125rem;color:var(--bone);background:var(--ink);border:0;border-radius:8px;padding:.85rem 2.75rem;cursor:pointer}
+button:hover{background:#3d3d3b}
+a{color:var(--ink)}
+.btns{display:flex;flex-direction:column;gap:.75rem;align-items:center}
+.btns button{min-width:11rem}
+button.alt{background:transparent;color:var(--ink);border:2px solid var(--ink)}
+button.alt:hover{background:rgba(43,43,42,.08)}
+.back{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:12px;font-size:1.75rem;line-height:1;text-decoration:none;padding:.4rem .6rem;border-radius:8px;z-index:5}
+.back:hover{background:rgba(43,43,42,.08)}
+#qbox svg{display:block;width:100%;max-width:380px;height:auto;max-height:36vh;margin:.25rem 0}
+#qbox p{margin:.75rem 0;line-height:1.5;font-size:1.1rem}
+#ans{width:100%;font:inherit;font-size:1.1rem;padding:.7rem .9rem;border:1px solid #c9c2b0;border-radius:8px;background:#fbf9f4;color:var(--ink)}
+.row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem}
+.row button,#nx{padding:.7rem 1.4rem;font-size:1rem}
+button.idk{background:#f3c5c0;color:#7a2b24}
+button.idk:hover{background:#eeb3ac}
+#fb{min-height:1.5em}
+#ans:disabled{color:var(--ink);opacity:1}
+#ans.bad{border-color:#c0392b;background:#fbe3e0;box-shadow:0 0 0 3px rgba(192,57,43,.25)}
+#ans.good{border-color:#2e7d4f;background:#e2f3e7;box-shadow:0 0 0 3px rgba(46,125,79,.25)}
+#ans.bad:focus-visible{outline-color:#c0392b}
+#fb.bad{color:#a5322a}
+#fb.good{color:#25663f}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@media (prefers-reduced-motion:no-preference){#ans.bad{animation:sh .3s}}
+@media (min-width:900px){#quiz.page.active{max-width:980px;padding-top:5rem}#qbox svg{max-width:700px}#qbox p{font-size:1.65rem}#ans{font-size:1.5rem;padding:1rem 1.2rem}.row button,#nx{font-size:1.25rem;padding:.9rem 2rem}.back{font-size:2rem}}
+:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+details.t{border-top:1px solid var(--line)}
+details.t:last-child{border-bottom:1px solid var(--line)}
+details.t>summary{padding:.9rem .25rem;cursor:pointer;font-size:1.1rem}
+.s{margin:0 0 1rem;color:var(--muted);line-height:1.5}
+.q{margin:0 0 1.5rem;padding:0 0 1.25rem;border-bottom:1px dashed var(--line)}
+.q:last-child{border-bottom:0}
+.q b{display:block;margin-bottom:.4rem;color:var(--orange);font-weight:400}
+.q p{margin:.5rem 0;line-height:1.5}
+.q svg{display:block;width:100%;max-width:380px;height:auto;margin:.25rem 0;color:var(--ink)}
+.q details summary{display:inline-block;cursor:pointer;background:var(--ink);color:var(--bone);border-radius:8px;padding:.45rem 1.1rem;font-size:.95rem}
+.q details[open] summary{background:var(--muted)}
+.q details p{color:var(--ink)}
+svg text{fill:var(--ink);stroke:none;font:14px Georgia,serif}
+svg .n{fill:var(--muted);font-size:12px}
+svg .h{fill:var(--orange);font-weight:bold}
+svg .b{font-size:16px}
+svg .e{text-anchor:end}
+svg .m{text-anchor:middle}
+svg line,svg path,svg circle{stroke:var(--ink);stroke-width:2;fill:none}
+svg .o line,svg .o circle,svg .o path{stroke:var(--orange)}
+</style>
+</head>
+<body>
+<main id="start" class="view active">
+  <h1>Hi</h1>
+  <div class="btns"><button id="startBtn" type="button">Start</button><button id="listBtn" type="button" class="alt">List</button></div>
+</main>
+<main id="quiz" class="page">
+  <a class="back" href="#" aria-label="Back">←</a>
+  <div id="qbox"></div>
+</main>
+<main id="listpage" class="page">
+  <a class="back" href="#" aria-label="Back">←</a>
+  <h2>Proofs</h2>
+  <div id="list"></div>
+</main>
+<script>
+const S=(i,w=260)=>`<svg viewBox="0 0 ${w} 165" preserveAspectRatio="xMinYMid meet">${i}</svg>`,
+tx=(x,y,t,c='n')=>`<text x="${x}" y="${y}" class="${c}">${t}</text>`,
+ln=(a,b,c,d)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}"/>`,
+q=(f,p,a)=>[f,p,a],V=[65,48,112];
+
+function tr(L,par){
+ let s=ln(15,50,245,50)+ln(15,110,245,110)+ln(107,15,193,145)+(par?'<path d="M38 45l6 5-6 5M38 105l6 5-6 5"/>':'');
+ for(let k=1;k<9;k++){const p=k>4?[170,110]:[130,50],i=(k-1)%4,l=i%2==0;
+  s+=tx(p[0]+(l?-10:18),p[1]+(i<2?-6:18),L[k]||k,(L[k]?'h':'n')+(l?' e':''))}
+ return S(s)}
+function fan(L,n,E){
+ const A=[0,40,90,130],o=[110,135],P=(a,r)=>[o[0]+r*Math.cos(a*Math.PI/180),o[1]-r*Math.sin(a*Math.PI/180)];
+ let s=tx(o[0]-4,o[1]+16,'S');
+ for(let i=0;i<=n;i++){const p=P(A[i],100),t=P(A[i],114);s+=ln(o[0],o[1],p[0],p[1])+tx(t[0]-4,t[1]+4,E?E[i]:'RPTU'[i])}
+ for(let i=0;i<n;i++){const t=P((A[i]+A[i+1])/2,55);s+=tx(t[0]-8,t[1]+4,L[i],'h')}
+ return S(s)}
+const sg=(a,b,c)=>S(ln(20,85,240,85)+[20,110,240].map((x,i)=>`<circle cx="${x}" cy="85" r="4" style="fill:currentColor"/>`+tx(x-4,110,'ABC'[i])).join('')+tx(65,72,a,'h m')+tx(175,72,b,'h m')+tx(130,40,c,'h m')+'<path d="M20 52h220M20 46v12M240 46v12"/>'),
+eq=(a,b)=>S(tx(180,45,a,'m b')+'<path d="M180 62v30m-7-9l7 9 7-9"/>'+tx(180,128,b,'m b'),360),
+ra=(a,b)=>S('<path d="M30 130V40M30 130h80M30 116h14v14"/><path d="M160 130V40M160 130h80M160 116h14v14"/>'+tx(55,105,a,'h')+tx(185,105,b,'h')),
+pl=n=>S(n.map((t,i)=>ln(20,35+45*i,230,35+45*i)+'<path d="M40 '+(30+45*i)+'l6 5-6 5"/>'+tx(238,40+45*i,t,'h')).join(''));
+
+function tri(o={},dx=0,nm='ABC'){
+ const p={A:[40+dx,125],B:[210+dx,125],C:[(o.rt?40:125)+dx,25]},mp=k=>[(p[k[0]][0]+p[k[1]][0])/2,(p[k[0]][1]+p[k[1]][1])/2];
+ let s=`<path d="M${p.A}L${p.B}L${p.C}Z"/>`,m='';
+ for(const k in o.t||{}){const n=o.t[k],a=p[k[0]],b=p[k[1]],l=Math.hypot(b[0]-a[0],b[1]-a[1]),U=[(b[0]-a[0])/l,(b[1]-a[1])/l],N=[-U[1]*7,U[0]*7],c=mp(k);
+  for(let i=0;i<n;i++){const f=5*(i-(n-1)/2),r=[c[0]+U[0]*f,c[1]+U[1]*f];m+=ln(r[0]-N[0],r[1]-N[1],r[0]+N[0],r[1]+N[1])}}
+ for(const k of o.r||''){const[a,b]=['A','B','C'].filter(x=>x!=k).map(x=>{const d=[p[x][0]-p[k][0],p[x][1]-p[k][1]],l=Math.hypot(d[0],d[1]);return[d[0]/l,d[1]/l]});m+=`<path d="M${p[k][0]+16*a[0]} ${p[k][1]+16*a[1]}A16 16 0 0 ${a[0]*b[1]-a[1]*b[0]>0?1:0} ${p[k][0]+16*b[0]} ${p[k][1]+16*b[1]}"/>`}
+ if(o.sq)m+=`<path d="M${p.A[0]} ${p.A[1]-14}h14v14"/>`;
+ const v=o.v||{};
+ if(v.A)s+=tx(p.A[0]+24,p.A[1]-6,v.A,'h');
+ if(v.B)s+=tx(p.B[0]-20,p.B[1]-6,v.B,'h e');
+ if(v.C)s+=tx(p.C[0]+(o.rt?24:0),p.C[1]+40,v.C,o.rt?'h':'h m');
+ if(o.ex){const d=[p.C[0]-p.B[0],p.C[1]-p.B[1]],l=Math.hypot(d[0],d[1]);s+=ln(p.B[0],p.B[1],p.B[0]+45,p.B[1])+tx(p.B[0]+14,p.B[1]-34,o.ex,'h');m+=`<path d="M${p.B[0]+20} ${p.B[1]}A20 20 0 0 0 ${p.B[0]+20*d[0]/l} ${p.B[1]+20*d[1]/l}"/>`}
+ const off={AC:[-10,4,'h e'],BC:[10,4,'h'],AB:[0,30,'h m']};
+ for(const k in o.sl||{}){const c=mp(k),f=off[k];s+=tx(c[0]+f[0],c[1]+f[1],o.sl[k],f[2])}
+ const L={A:[-16,16],B:[8,16],C:[-3,-8]};
+ for(let i=0;i<3;i++){const k='ABC'[i];s+=tx(p[k][0]+L[k][0],p[k][1]+L[k][1],nm[i])}
+ return s+`<g class="o">${m}</g>`}
+const one=o=>S(tri(o)),two=(a,b)=>S(tri(a)+tri(b,260,'DEF'),520);
+
+const REL={cor:[[1,5],[2,6]],aia:[[3,6],[4,5]],aea:[[1,8],[2,7]],cia:[[3,5],[4,6]]};
+const fw=(k,N)=>{const s=k=='cia',R=REL[k],o=[];
+ [0,1].forEach(i=>{const[a,b]=R[i],v=V[i];o.push(q(tr({[a]:v+'°',[b]:'?'},1),`Lines ℓ and m are parallel. m∠${a} = ${v}°. Find m∠${b}.`,`${s?180-v:v}° — ${N}`))});
+ const[a,b]=R[0];
+ o.push(q(tr({[a]:'(2x+10)°',[b]:'(3x−20)°'},1),`Lines ℓ and m are parallel. m∠${a} = (2x + 10)° and m∠${b} = (3x − 20)°. Find x.`,s?`x = 38 (the angles are 86° and 94°) — ${N}`:`x = 30 (both angles are 70°) — ${N}`));
+ return o};
+const cv=(k,N)=>{const s=k=='cia',R=REL[k],o=[];
+ [0,1].forEach(i=>{const[a,b]=R[i],v=V[i],w=s?180-v:v;o.push(q(tr({[a]:v+'°',[b]:w+'°'}),`m∠${a} = ${v}° and m∠${b} = ${w}°. Are lines ℓ and m parallel? Which theorem tells you?`,`Yes — ${N}.`))});
+ const[a,b]=R[0],w=s?100:75;
+ o.push(q(tr({[a]:'70°',[b]:w+'°'}),`m∠${a} = 70° and m∠${b} = ${w}°. Are lines ℓ and m parallel?`,`No — the angles are not ${s?'supplementary':'congruent'}, so the lines cannot be shown parallel.`));
+ return o};
+
+const nm={A:'D',B:'E',C:'F'},CG={sas:['AB','aB','BC'],sss:['AB','BC','AC'],hl:['qA','BC','AB'],asa:['aA','AB','aB'],aas:['aA','aB','BC']},
+pt=x=>x[0]=='a'?`∠${x[1]} ≅ ∠${nm[x[1]]}`:x[0]=='q'?`right angles at ${x[1]} and ${nm[x[1]]}`:`${x} ≅ ${nm[x[0]]+nm[x[1]]}`,
+nv=x=>x[0]=='a'?`m∠${x[1]} = m∠${nm[x[1]]} = ${{A:90,B:37,C:53}[x[1]]}°`:x[0]=='q'?`∠${x[1]} and ∠${nm[x[1]]} are right angles`:`${x} = ${nm[x[0]]+nm[x[1]]} = ${{AB:8,BC:10,AC:6}[x]}`,
+fg=(P,rt)=>{const o={rt,t:{},r:'',sq:0};P.forEach(x=>{if(x[0]=='a')o.r+=x[1];else if(x[0]=='q')o.sq=1;else o.t[x]={AB:1,BC:2,AC:3}[x]});return two(o,o)},
+cg=(N,k)=>{const P=CG[k],rt=k=='hl';return[
+ q(fg(P,rt),'The marks show congruent parts of ΔABC and ΔDEF. Which theorem proves the triangles congruent?',N),
+ q(fg(P,rt),`Given: ${P.map(nv).join('; ')}. Which theorem proves ΔABC ≅ ΔDEF?`,N),
+ q(fg(P.slice(0,2),rt),`Only two pairs of parts are marked. Which third pair would let you prove the triangles congruent with the ${N}?`,pt(P[2]))]};
+
+const G={
+ sa:N=>[['7','5','?','B is between A and C. AB = 7 and BC = 5. Find AC.','12'],['8','?','20','B is between A and C. AB = 8 and AC = 20. Find BC.','12'],['2x+1','x+3','19','B is between A and C. AB = 2x + 1, BC = x + 3, and AC = 19. Find x.','x = 5 (AB = 11, BC = 8)']].map(a=>q(sg(a[0],a[1],a[2]),a[3],`${a[4]} — ${N}`)),
+ pro:N=>[['25°','110°','85°'],['40°','95°','55°'],['130°','60°','70°']].map(a=>q(fan(['','?'],2,['0°',a[0],a[1]]),`On a protractor, ray SA reads ${a[0]} and ray SB reads ${a[1]}. Find m∠ASB.`,`${a[2]} — ${N}`)),
+ aa:N=>[q(fan(['30°','45°'],2),'P is in the interior of ∠RST. m∠RSP = 30° and m∠PST = 45°. Find m∠RST.',`75° — ${N}`),q(fan(['35°','?'],2),'P is in the interior of ∠RST. m∠RST = 90° and m∠RSP = 35°. Find m∠PST.',`55° — ${N}`),q(fan(['2x°','(x+10)°'],2),'P is in the interior of ∠RST. m∠RSP = 2x°, m∠PST = (x + 10)°, and m∠RST = 70°. Find x.',`x = 20 (m∠RSP = 40°) — ${N}`)],
+ ra:N=>[q(ra('∠A = 90°','∠B = ?'),'∠A and ∠B are right angles. m∠A = 90°. Find m∠B.',`90° — ${N}`),q(ra('∠P','∠Q'),'Perpendicular lines meet at P, and a different pair of perpendicular lines meets at Q. ∠P and ∠Q are right angles. Are they congruent?',`Yes — ${N}.`),q(ra('∠A = 90°','∠B = (5x+40)°'),'∠A and ∠B are right angles. m∠A = 90° and m∠B = (5x + 40)°. Find x.',`x = 10 — ${N}`)],
+ csup:N=>[[1,2,4],[3,4,2],[2,1,3]].map(([a,m,b],i)=>q(tr({[a]:V[i]+'°',[b]:'?'}),`∠${a} and ∠${m} are supplementary, and ∠${b} and ∠${m} are supplementary. m∠${a} = ${V[i]}°. Find m∠${b}.`,`${V[i]}° — ${N}`)),
+ ccomp:N=>[35,52].map(v=>q(fan([v+'°','2','?'],3),`∠1 and ∠2 are complementary, and ∠3 and ∠2 are complementary. m∠1 = ${v}°. Find m∠3.`,`${v}° — ${N}`)).concat([q(fan(['(2x+5)°','2','(3x−10)°'],3),'∠1 and ∠2 are complementary, and ∠3 and ∠2 are complementary. m∠1 = (2x + 5)° and m∠3 = (3x − 10)°. Find x.',`x = 15 (both angles are 35°) — ${N}`)]),
+ lp:N=>[[1,2],[3,4],[1,3]].map(([a,b],i)=>q(tr({[a]:V[i]+'°',[b]:'?'}),`∠${a} and ∠${b} form a linear pair. m∠${a} = ${V[i]}°. Find m∠${b}.`,`${180-V[i]}° — ${N}`)),
+ vert:N=>[[1,4],[2,3],[5,8]].map(([a,b],i)=>q(tr({[a]:V[i]+'°',[b]:'?'}),`m∠${a} = ${V[i]}°. Find m∠${b}.`,`${V[i]}° — ${N}`)),
+ cor:N=>fw('cor',N),aia:N=>fw('aia',N),aea:N=>fw('aea',N),cia:N=>fw('cia',N),
+ vcor:N=>cv('cor',N),vaia:N=>cv('aia',N),vaea:N=>cv('aea',N),vcia:N=>cv('cia',N),
+ tpar:N=>[['ℓ','m','n','ℓ ∥ m and m ∥ n. How are ℓ and n related?','ℓ ∥ n (they are parallel)'],['p','q','r','p ∥ q and q ∥ r. How are p and r related?','p ∥ r (they are parallel)'],['a','b','c','Line a ∥ line c and line b ∥ line c. How are a and b related?','a ∥ b (they are parallel)']].map(a=>q(pl([a[0],a[1],a[2]]),a[3],`${a[4]} — ${N}`)),
+ lpp:N=>[q(tr({1:'x°',2:'x°'}),'∠1 and ∠2 form a linear pair and are congruent. Find each measure. What do you know about the lines?',`90° each, so the lines are perpendicular — ${N}`),q(tr({1:'(4x+10)°',2:'(6x−30)°'}),'∠1 and ∠2 form a linear pair and are congruent. m∠1 = (4x + 10)° and m∠2 = (6x − 30)°. Find x. Are the lines perpendicular?',`x = 20, each angle is 90°, so the lines are perpendicular — ${N}`),q(tr({1:'(5x−10)°',2:'(3x+30)°'}),'∠1 and ∠2 form a linear pair and are congruent. m∠1 = (5x − 10)° and m∠2 = (3x + 30)°. Find x. Are the lines perpendicular?',`x = 20, each angle is 90°, so the lines are perpendicular — ${N}`)],
+ pt:N=>[[1,5],[3,6],[4,8]].map(([a,b])=>q(tr({[a]:'90°',[b]:'?'},1),`ℓ ∥ m and the transversal t is perpendicular to ℓ, so m∠${a} = 90°. Find m∠${b}.`,`90°, so t is perpendicular to m too — ${N}`)),
+ lpt:N=>[[1,5,'90°','Yes'],[3,6,'90°','Yes'],[1,5,'85°','No']].map(([a,b,w,r],i)=>q(tr({[a]:'90°',[b]:w}),`The transversal t meets ℓ and m. m∠${a} = 90° and m∠${b} = ${w}. Are ℓ and m parallel?`,r=='Yes'?`Yes — t is perpendicular to both lines (${N}).`:'No — t is not perpendicular to both lines, so the theorem does not apply.')),
+ tsum:N=>[['50°','60°','x°','x = 70°'],['35°','85°','x°','x = 60°'],['x°','2x°','3x°','x = 30 (the angles are 30°, 60°, 90°)']].map(a=>q(one({v:{A:a[0],B:a[1],C:a[2]}}),`The angles of ΔABC are ${a[0]}, ${a[1]}, and ${a[2]}. Find x.`,`${a[3]} — ${N}`)),
+ cts:N=>[['35°','x°','m∠B = 35°. Find m∠C.','55°'],['62°','x°','m∠B = 62°. Find m∠C.','28°'],['x°','2x°','m∠B = x° and m∠C = 2x°. Find x.','x = 30 (30° and 60°)']].map(a=>q(one({rt:1,sq:1,v:{B:a[0],C:a[1]}}),`ΔABC has a right angle at A. ${a[2]}`,`${a[3]} — ${N}`)),
+ ext:N=>[['45°','70°','x°','m∠A = 45° and m∠C = 70°. Find the exterior angle x.','x = 115°'],['50°','?','130°','m∠A = 50° and the exterior angle at B is 130°. Find m∠C.','80°'],['2x°','(x+10)°','100°','m∠A = 2x°, m∠C = (x + 10)°, and the exterior angle at B is 100°. Find x.','x = 30']].map(a=>q(one({ex:a[2],r:'AC',v:{A:a[0],C:a[1]}}),a[3],`${a[4]} — ${N}`)),
+ third:N=>[q(two({v:{A:'50°',B:'60°',C:'?'}},{v:{A:'50°',B:'60°',C:'?'}}),'∠A ≅ ∠D and ∠B ≅ ∠E. m∠A = 50° and m∠B = 60°. Find m∠C and m∠F.',`70° and 70°, so ∠C ≅ ∠F — ${N}`),q(two({v:{A:'80°',B:'35°',C:'?'}},{v:{A:'80°',B:'35°',C:'?'}}),'∠A ≅ ∠D and ∠B ≅ ∠E. m∠A = 80° and m∠B = 35°. Find m∠C and m∠F.',`65° and 65°, so ∠C ≅ ∠F — ${N}`),q(two({r:'AB',v:{C:'(2x+10)°'}},{r:'AB',v:{C:'70°'}}),'∠A ≅ ∠D and ∠B ≅ ∠E. m∠C = (2x + 10)° and m∠F = 70°. Find x.',`x = 30 — ${N}`)],
+ base:N=>[q(one({t:{AC:1,BC:1},v:{A:'50°',B:'?'}}),'AC ≅ BC and m∠A = 50°. Find m∠B.',`50° — ${N}`),q(one({t:{AC:1,BC:1},v:{A:'(3x+5)°',B:'(5x−15)°'}}),'AC ≅ BC, m∠A = (3x + 5)°, and m∠B = (5x − 15)°. Find x.',`x = 10 (both angles are 35°) — ${N}`),q(one({t:{AC:1,BC:1},v:{C:'40°',A:'?'}}),'AC ≅ BC and m∠C = 40°. Find m∠A.',`70° — ${N}, plus the Triangle Sum Theorem`)],
+ cbase:N=>[q(one({r:'AB',v:{A:'55°',B:'55°'}}),'m∠A = m∠B = 55°. Which two sides of ΔABC are congruent?',`AC ≅ BC — ${N}`),q(one({r:'AB',sl:{AC:'9',BC:'?'}}),'∠A ≅ ∠B and AC = 9. Find BC.',`9 — ${N}`),q(one({r:'AB',sl:{AC:'2x+1',BC:'3x−4'}}),'∠A ≅ ∠B, AC = 2x + 1, and BC = 3x − 4. Find x.',`x = 5 (both sides are 11) — ${N}`)],
+ eqi:N=>[q(one({t:{AB:1,BC:1,AC:1},v:{A:'?'}}),'ΔABC is equilateral. Find m∠A.',`60° — ${N}`),q(one({t:{AB:1,BC:1,AC:1},v:{A:'(2x+20)°'}}),'ΔABC is equilateral and m∠A = (2x + 20)°. Find x.',`x = 20 — ${N}`),q(one({sl:{AB:'8',BC:'8',AC:'8'},v:{B:'?'}}),'AB = BC = AC = 8. Find m∠B.',`60° — ${N}`)],
+ ceqi:N=>[q(one({r:'ABC',sl:{AB:'12',BC:'?',AC:'?'}}),'ΔABC is equiangular and AB = 12. Find BC and AC.',`12 and 12 — ${N}`),q(one({r:'ABC',sl:{AB:'2x+3',BC:'4x−5'}}),'ΔABC is equiangular, AB = 2x + 3, and BC = 4x − 5. Find x.',`x = 4 (each side is 11) — ${N}`),q(one({r:'ABC',sl:{AB:'7'}}),'ΔABC is equiangular and AB = 7. Find its perimeter.',`21 — ${N}`)],
+ sas:N=>cg(N,'sas'),sss:N=>cg(N,'sss'),hl:N=>cg(N,'hl'),asa:N=>cg(N,'asa'),aas:N=>cg(N,'aas')};
+
+const D=`1.2~Segment Addition Postulate~If B is between A and C, then AB + BC = AC.~sa
+1.3~Protractor Postulate~The rays from O on one side of line OB can be matched with the numbers 0 to 180.~pro
+1.4~Angle Addition Postulate~If P is in the interior of ∠RST, then m∠RST = m∠RSP + m∠PST.~aa
+2.4~Addition Property of Equality~If a = b, then a + c = b + c.~eq~x − 3 = 8|x = 11;AB = CD|AB + 5 = CD + 5;m∠1 = m∠2|m∠1 + 30° = m∠2 + 30°
+2.4~Subtraction Property of Equality~If a = b, then a − c = b − c.~eq~x + 6 = 15|x = 9;AB = CD|AB − 2 = CD − 2;3x + 4 = 19|3x = 15
+2.4~Multiplication Property of Equality~If a = b, then a · c = b · c, c ≠ 0.~eq~x/4 = 5|x = 20;AB = CD|3 · AB = 3 · CD;x/2 = y|x = 2y
+2.4~Division Property of Equality~If a = b, then a/c = b/c, c ≠ 0.~eq~5x = 30|x = 6;2 · AB = 2 · CD|AB = CD;4 · m∠1 = 4 · m∠2|m∠1 = m∠2
+2.4~Substitution Property of Equality~If a = b, then a can be substituted for b in any equation or expression.~eq~x = 5 and y = x + 2|y = 5 + 2;m∠1 = m∠2 and m∠2 + m∠3 = 90°|m∠1 + m∠3 = 90°;AB = 4 and AB + BC = 10|4 + BC = 10
+2.4~Distributive Property of Equality~a(b + c) = ab + ac and a(b − c) = ab − ac.~eq~3(x + 2) = 12|3x + 6 = 12;2(x − 5) = 14|2x − 10 = 14;4(y + 1) = 20|4y + 4 = 20
+2.4~Reflexive Property of Equality~a = a, AB = AB, m∠A = m∠A.~eq~Segment AB is in two triangles|AB = AB;Angle A is in two triangles|m∠A = m∠A;x|x = x
+2.4~Symmetric Property of Equality~If a = b, then b = a.~eq~AB = CD|CD = AB;x = 7|7 = x;m∠1 = m∠2|m∠2 = m∠1
+2.4~Transitive Property of Equality~If a = b and b = c, then a = c.~eq~AB = CD and CD = EF|AB = EF;m∠1 = m∠2 and m∠2 = m∠3|m∠1 = m∠3;p = q and q = r|p = r
+2.5~Reflexive Property of Segment or Angle Congruence~AB ≅ AB and ∠A ≅ ∠A.~eq~Segment DE|DE ≅ DE;Angle P|∠P ≅ ∠P;Segment WX is a side of two triangles|WX ≅ WX
+2.5~Symmetric Property of Segment or Angle Congruence~If AB ≅ CD, then CD ≅ AB. Same for angles.~eq~AB ≅ CD|CD ≅ AB;∠1 ≅ ∠2|∠2 ≅ ∠1;∠P ≅ ∠Q|∠Q ≅ ∠P
+2.5~Transitive Property of Segment or Angle Congruence~If AB ≅ CD and CD ≅ EF, then AB ≅ EF. Same for angles.~eq~AB ≅ CD and CD ≅ EF|AB ≅ EF;∠1 ≅ ∠2 and ∠2 ≅ ∠3|∠1 ≅ ∠3;∠A ≅ ∠B and ∠B ≅ ∠C|∠A ≅ ∠C
+2.6~Right Angle Congruence Theorem~All right angles are congruent.~ra
+2.6~Congruent Supplements Theorem~If two angles are supplementary to the same angle, then they are congruent.~csup
+2.6~Congruent Complements Theorem~If two angles are complementary to the same angle, then they are congruent.~ccomp
+2.6~Linear Pair Postulate~If two angles form a linear pair, then they are supplementary.~lp
+2.6~Vertical Angles Congruence Theorem~Vertical angles are congruent.~vert
+3.2~Corresponding Angles Theorem~If two parallel lines are cut by a transversal, then the pairs of corresponding angles are congruent.~cor
+3.2~Alternate Interior Angles Theorem~If two parallel lines are cut by a transversal, then the pairs of alternate interior angles are congruent.~aia
+3.2~Alternate Exterior Angles Theorem~If two parallel lines are cut by a transversal, then the pairs of alternate exterior angles are congruent.~aea
+3.2~Consecutive (Same Side) Interior Angles Theorem~If two parallel lines are cut by a transversal, then the pairs of consecutive interior angles are supplementary.~cia
+3.3~Corresponding Angles Converse~If two lines are cut by a transversal so the corresponding angles are congruent, then the lines are parallel.~vcor
+3.3~Alternate Interior Angles Converse~If two lines are cut by a transversal so the alternate interior angles are congruent, then the lines are parallel.~vaia
+3.3~Alternate Exterior Angles Converse~If two lines are cut by a transversal so the alternate exterior angles are congruent, then the lines are parallel.~vaea
+3.3~Consecutive Interior Angles Converse~If two lines are cut by a transversal so the consecutive interior angles are supplementary, then the lines are parallel.~vcia
+3.3~Transitive Property of Parallel Lines~If two lines are parallel to the same line, then they are parallel to each other.~tpar
+3.4~Linear Pair Perpendicular Theorem~If two lines intersect to form a linear pair of congruent angles, then the lines are perpendicular.~lpp
+3.4~Perpendicular Transversal Theorem~In a plane, if a transversal is perpendicular to one of two parallel lines, then it is perpendicular to the other line.~pt
+3.4~Lines Perpendicular to a Transversal Theorem~In a plane, if two lines are perpendicular to the same line, then they are parallel to each other.~lpt
+5.1~Triangle Sum Theorem~The sum of the measures of the interior angles of a triangle is 180°.~tsum
+5.1~Corollary to the Triangle Sum Theorem~The acute angles of a right triangle are complementary.~cts
+5.1~Exterior Angle Theorem~An exterior angle of a triangle is equal to the sum of the two nonadjacent interior angles.~ext
+5.2~Third Angles Theorem~If two angles of one triangle are congruent to two angles of another triangle, then the third angles are also congruent.~third
+5.3~Side-Angle-Side (SAS) Congruence Theorem~If two sides and the included angle of one triangle are congruent to two sides and the included angle of a second triangle, then the two triangles are congruent.~sas
+5.4~Base Angles Theorem~If two sides of a triangle are congruent, then the angles opposite them are congruent.~base
+5.4~Converse of the Base Angles Theorem~If two angles of a triangle are congruent, then the sides opposite them are congruent.~cbase
+5.4~Corollary to the Base Angles Theorem~If a triangle is equilateral, then it is equiangular.~eqi
+5.4~Corollary to the Converse of the Base Angles Theorem~If a triangle is equiangular, then it is equilateral.~ceqi
+5.5~Side-Side-Side (SSS) Congruence Theorem~If three sides of one triangle are congruent to three sides of a second triangle, then the two triangles are congruent.~sss
+5.5~Hypotenuse-Leg (HL) Congruence Theorem~If the hypotenuse and a leg of a right triangle are congruent to the hypotenuse and a leg of a second right triangle, then the two triangles are congruent.~hl
+5.6~Angle-Side-Angle (ASA) Congruence Theorem~If two angles and the included side of one triangle are congruent to two angles and the included side of a second triangle, then the two triangles are congruent.~asa
+5.6~Angle-Angle-Side (AAS) Congruence Theorem~If two angles and a non-included side of one triangle are congruent to two angles and the corresponding non-included side of a second triangle, then the two triangles are congruent.~aas`.split('\n').map(l=>l.split('~'));
+
+const ALL=[];
+document.getElementById('list').innerHTML=D.map(([sec,name,st,k,x])=>{
+ const Q=k=='eq'?x.split(';').map(s=>{const[a,b]=s.split('|');return q(eq(a,b),'Which property justifies the step from the top statement to the bottom statement?',name)}):G[k](name);
+ if(k!='pro'){Q.forEach(z=>ALL.push(z));if(!/^(eq|sas|sss|hl|asa|aas)$/.test(k))ALL.push(q('','Which postulate or theorem says: “'+st+'”',name))}return `<details class="t"><summary>${sec} · ${name}</summary><p class="s">${st}</p>`+Q.map((z,i)=>`<div class="q"><b>Question ${i+1}</b>${z[0]||''}<p>${z[1]}</p><details><summary>Show answer</summary><p>${z[2]}</p></details></div>`).join('')+'</details>'}).join('');
+
+const $=id=>document.getElementById(id),NAMES=new Set(D.map(d=>d[1]));
+const canon=s=>{s=s.toLowerCase().replace(/\bangles?\b/g,'').replace(/ℓ/g,'l').replace(/\s+/g,'').replace(/iscongruentto|congruentto|≅|≡|~/g,'=').replace(/degrees?|°|∠|δ/g,'').replace(/isparallelto|parallelto|\|\||∥/g,'∥').replace(/[^a-z0-9=∥.]/g,'');
+ for(const c of '=∥'){const p=s.split(c);if(p.length==2&&p[0]&&p[1]&&!s.includes(c=='='?'∥':'='))return p.sort().join(c)}return s};
+function accepts(a){
+ const V=new Set(),add=v=>{const c=canon(v);if(c)V.add(c)},d=a.indexOf(' — ');
+ if(d<0&&NAMES.has(a)){const b=a.replace(/ (Theorem|Postulate)$/,''),u=b.replace(/\s*\(.*?\)/,'');
+  [a,b,b.replace(/ of (Equality|Segment or Angle Congruence)$/,''),b.replace(/ Property of .*$/,''),a.replace(/^.*\((\w+)\).*$/,'$1'),b.replace(/^.*\((\w+)\)/,'$1'),u,u.replace(/ Congruence$/,'')].forEach(add);return V}
+ const key=(d<0?a:a.slice(0,d)).replace(/\.$/,''),main=key.split(/ \(|, /)[0].replace(/ each$/,'');
+ [key,main].forEach(v=>{add(v);if(v.includes('='))add(v.split('=').pop());const p=v.split(' and ');if(p.length>1&&p.every(x=>x==p[0]))add(p[0]);const n=v.match(/^\d+(\.\d+)?/);if(n)add(n[0]);if(v.includes('∥'))add('parallel')});
+ if(key.startsWith('right angles'))['right','rightangle','rightangles'].forEach(add);
+ return V}
+let cur,last=-1;
+function nextQ(){let i;do{i=Math.floor(Math.random()*ALL.length)}while(i==last&&ALL.length>1);last=i;cur=ALL[i];const acc=accepts(cur[2]);
+ $('qbox').innerHTML=`${cur[0]||''}<p>${cur[1]}</p><input id="ans" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Type your answer" aria-label="Your answer"><div class="row"><button id="chk" type="button">Check</button><button id="idk" type="button" class="idk">I don’t know</button></div><p id="fb" aria-live="polite"></p><button id="nx" type="button" hidden>Next question</button>`;
+ const done=m=>{$('ans').disabled=true;$('chk').hidden=true;$('idk').hidden=true;$('nx').hidden=false;$('fb').textContent=m;$('nx').focus()},
+ check=()=>{const v=$('ans').value.trim();if(!v){$('fb').textContent='Type an answer first.';return}
+  if(acc.has(canon(v))||(/∥/.test(cur[2])&&/parallel/i.test(v)&&!/not|n.t|perp|neither/i.test(v))){$('ans').classList.add('good');$('fb').className='good';done('Correct! '+cur[2])}else{const a=$('ans');a.classList.remove('bad');void a.offsetWidth;a.classList.add('bad');$('fb').className='bad';$('fb').textContent='Not quite. Try again, or tap I don’t know.'}};
+ $('chk').onclick=check;$('ans').onkeydown=e=>{if(e.key=='Enter')check()};
+ $('idk').onclick=()=>{$('ans').classList.remove('bad');$('fb').className='';done('Answer: '+cur[2])};$('ans').oninput=()=>{$('ans').classList.remove('bad');$('fb').className=''};$('nx').onclick=nextQ;$('ans').focus()}
+function show(){const h=location.hash.slice(1),id=h=='quiz'?'quiz':h=='list'?'listpage':'start';
+ ['start','quiz','listpage'].forEach(x=>$(x).classList.toggle('active',x==id));
+ if(id=='quiz')nextQ();scrollTo(0,0)}
+$('startBtn').onclick=()=>{location.hash='quiz'};$('listBtn').onclick=()=>{location.hash='list'};
+addEventListener('hashchange',show);show();
+</script>
+</body>
+</html>
